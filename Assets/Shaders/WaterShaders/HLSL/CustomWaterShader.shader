@@ -25,7 +25,7 @@ Shader "Unlit/Custom HLSL Water Shader"
         Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         LOD 100
 
-        //Blend SrcAlpha OneMinusSrcAlpha
+        Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off   
         
 
@@ -99,6 +99,7 @@ Shader "Unlit/Custom HLSL Water Shader"
 
                 float3 crossX = cross(TangentMatrix[2].xyz, worldDerivativeX);
                 float3 crossY = cross(TangentMatrix[2].xyz, worldDerivativeY);
+                //float3 crossY = cross(worldDerivativeY, TangentMatrix[2].xyz);
                 float d = dot(worldDerivativeX, crossY);
                 float sgn = d < 0.0 ? (-1.f) : 1.f;
                 float surface = sgn / max(0.00000000000001192093f, abs(d));
@@ -161,7 +162,6 @@ Shader "Unlit/Custom HLSL Water Shader"
                 
                 float depthDif = saturate((sceneZ - fragZ) / _WaterDepth);
                 float4 waterColour = lerp(_ShallowWaterColour, _DeepWaterColour, depthDif);
-                //return float4(waterColour.xyz,1);
                 
                 //foam stuff
                 float depthDifFoam = saturate((sceneZ - fragZ) / (_FoamAmount));
@@ -174,8 +174,6 @@ Shader "Unlit/Custom HLSL Water Shader"
                 float stepCalc = step(foamFader, gradientNoiceFoam);
 
                 float lerper = _FoamColour.w * stepCalc;
-                
-                //return float4(stepCalc, 0, 0, 1);
 
                 float4 foamWaterColour = lerp(waterColour,_FoamColour, stepCalc);
                 float4 outColour = lerp(float4(opaqueTexture, 1), foamWaterColour, foamWaterColour.w);
