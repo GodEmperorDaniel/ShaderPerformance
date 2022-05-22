@@ -22,24 +22,23 @@ Shader "Unlit/Unlit_HLSLToonShader"
         Tags 
         { 
             "RenderType"="Opaque"
-            "LightMode" = "UniversalForward" //not sure this exsists in URP; answer, it does not
+            "LightMode" = "UniversalForward" 
             "PassFlags" = "OnlyDirectional"
         }
-
         LOD 100
+
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+        ENDHLSL
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fwdbase
 
-            #include "UnityCG.cginc"
-            #include "Lighting.cginc"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
-            #include "UnityShadowLibrary.cginc"
-
+            
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -70,16 +69,15 @@ Shader "Unlit/Unlit_HLSLToonShader"
             v2f vert (appdata v)
             {
                 v2f o;
-                
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = mul(UNITY_MATRIX_VP, mul(unity_ObjectToWorld, v.vertex));
                 
                 //calculate shadow coords to read 
-                float4 posWS = mul(unity_ObjectToWorld, v.vertex);
-                o.shadowCoords = mul(unity_WorldToShadow[1], posWS);
+                float4 _posWS = mul(unity_ObjectToWorld, v.vertex);
+                o.shadowCoords = TransformWorldToShadowCoord(_posWS);
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.worldNormal = UnityObjectToWorldNormal(v.normal);
-                o.viewDirection = WorldSpaceViewDir(v.vertex);
+                o.worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
+                o.viewDirection = _WorldSpaceCameraPos - _posWS;
                 o.glossXGloss = _Glossiness * _Glossiness;
                 return o;
             }
@@ -107,40 +105,37 @@ Shader "Unlit/Unlit_HLSLToonShader"
                 return rimCol;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
 
                 float3 normal = normalize(i.worldNormal);
-                float3 lightDir = normalize(_WorldSpaceLightPos0);
+                Light _myLight = GetMainLight(i.shadowCoords);
+               
+                ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
+                float ShadowAtten = SampleShadowmapFiltered(TEXTURE2D_SHADOW_ARGS(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture),i.shadowCoords, shadowSamplingData);
+
+                float3 lightDir = normalize(_myLight.direction);
                 float NdotL = dot(lightDir, normal);
-                
-                //shadows
-                half4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
-                Light mainLight = GetMainLight(shadowCoord);
-                Direction = mainLight.direction;
-                Colour = mainLight.color;
-                DistanceAtten = mainLight.distanceAttenuation;
-                ShadowAtten = mainLight.shadowAttenuation;
 
-                /*UNITY_DECLARE_SHADOWMAP(_ShadowMapTexture);
-                fixed shadow = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, i.shadowCoords.xyz);*/
-                //float shadow = UnitySampleShadowmap_PCF3x3(i.shadowCoords, 1.0);
-
-                float lightIntensity = smoothstep(0, 0.01, NdotL); //this is only a step
-                return ShadowAtten;
-                float4 light = lightIntensity * _LightColor0;
+                float lightIntensity = smoothstep(0, 0.01, NdotL * ShadowAtten);
 
                 //for specular
                 float3 v = normalize(i.viewDirection);
-                float4 spec = specularComponent(v, lightDir, normal, light, i.glossXGloss);
+                float4 spec = specularComponent(v, lightDir, normal, lightIntensity, i.glossXGloss);
 
-                float4 rim = rimLighting(v, normal, NdotL);
+                //rimlight
+                float4 rim = rimLighting(v, normal, lightIntensity);
 
-                return _FrontColour * (light + _BackColour + spec + rim);
+                //mixing/blending
+                float4 specPlusRim = rim + spec;
+                float4 front = lightIntensity * _FrontColour;
+                float4 back = (1 - lightIntensity) * _BackColour;
+
+                return back + front + specPlusRim;
             }
-            ENDCG
+        ENDHLSL
         }
 
-        UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
+        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
     }
 }
