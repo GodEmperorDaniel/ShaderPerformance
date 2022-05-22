@@ -25,7 +25,7 @@ Shader "Unlit/Custom HLSL Water Shader"
         Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         LOD 100
 
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend OneMinusDstAlpha SrcAlpha
         ZWrite Off   
         
 
