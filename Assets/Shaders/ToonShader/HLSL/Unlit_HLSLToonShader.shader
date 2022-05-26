@@ -135,7 +135,7 @@ Shader "Unlit/Unlit_HLSLToonShader"
             }
         ENDHLSL
         }
-
+        //UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
         UsePass "Universal Render Pipeline/Lit/ShadowCaster"
     }
 }
