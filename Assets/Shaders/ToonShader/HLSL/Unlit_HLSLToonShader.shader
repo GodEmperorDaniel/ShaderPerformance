@@ -37,7 +37,6 @@ Shader "Unlit/Unlit_HLSLToonShader"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fwdbase
-
             
             struct appdata
             {
@@ -130,7 +129,6 @@ Shader "Unlit/Unlit_HLSLToonShader"
                 float4 specPlusRim = rim + spec;
                 float4 front = lightIntensity * _FrontColour;
                 float4 back = (1 - lightIntensity) * _BackColour;
-
                 return back + front + specPlusRim;
             }
         ENDHLSL

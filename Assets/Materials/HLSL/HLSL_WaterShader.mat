@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_CustomWaterShader
+  m_Name: HLSL_WaterShader
   m_Shader: {fileID: 4800000, guid: d1e5d4459d4debf41a938a3fd9ab4c57, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

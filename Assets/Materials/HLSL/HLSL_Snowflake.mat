@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_HLSLToonShader
-  m_Shader: {fileID: 4800000, guid: 303941620b10951459394c3bd798ba75, type: 3}
+  m_Name: HLSL_Snowflake
+  m_Shader: {fileID: 4800000, guid: ff31369adfaa8e44a831a4e3493a76eb, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -24,12 +24,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Glossiness: 32
-    - _RimAmount: 0.718
-    - _RimThreshold: 0.1
-    m_Colors:
-    - _BackColour: {r: 0.033104774, g: 0.45078585, b: 0.46778384, a: 0}
-    - _FrontColour: {r: 0.45078585, g: 0.15294118, b: 0.15292618, a: 1}
-    - _RimColour: {r: 1, g: 1, b: 1, a: 0}
-    - _SpecularColour: {r: 0.29411766, g: 0, b: 0, a: 0}
+    - _BranchScale: 0.1
+    - _Branches: 5
+    - _MaskSize: 1.36
+    - _Sides: 6
+    m_Colors: []
   m_BuildTextureStacks: []

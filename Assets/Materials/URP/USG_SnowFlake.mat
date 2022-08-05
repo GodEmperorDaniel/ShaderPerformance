@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: USGToonShader
-  m_Shader: {fileID: -6465566751694194690, guid: c74e71d2fb486da48b0a664f432871ac, type: 3}
+  m_Name: USG_SnowFlake
+  m_Shader: {fileID: -6465566751694194690, guid: ad33b0045350bf44f8016b0b3d840732, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -32,13 +32,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_00129aa6a7f146c1b963f743fb5f5d24: 32
-    - Vector1_539b87b74fd64a8d90c74e8e4c222ff0: 1
-    - Vector1_5deacd39227a49b4912e2dfd14cfa0d5: 0.718
-    - Vector1_69fa538cc52346aab2ec6baa77879ddb: 0.1
-    m_Colors:
-    - Color_43955205c10c42f79ab32d1d98573ddc: {r: 1, g: 1, b: 1, a: 0}
-    - Color_abdbba69124e49f2a5fae4ebc8ac8d34: {r: 0.03337486, g: 0.4504691, b: 0.46666667, a: 1}
-    - Color_bde5b10f9da0436388e76f286ae352c1: {r: 0.4528302, g: 0.1516554, b: 0.1516554, a: 1}
-    - Color_d779d87f4e3c4fbbb2ec6c43ab8e7349: {r: 0.2924528, g: 0, b: 0, a: 0}
+    - Vector1_3a601a0aebcc42cb9b5d30a529e0723f: 6
+    - Vector1_471aa4c9d3de42bc9dfa5966cdbfd28d: 0
+    - Vector1_8f060bcf82f84817baca836fe9d0f14b: 5
+    - Vector1_df86f76f5eba47738c9c11671d74dd28: 0.1
+    m_Colors: []
   m_BuildTextureStacks: []
